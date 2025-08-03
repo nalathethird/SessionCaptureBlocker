@@ -1,0 +1,105 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<RootNamespace>FckSessionCapture</RootNamespace>
+		<AssemblyName>FckSessionCapture</AssemblyName>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<TargetFramework>net472</TargetFramework>
+		<FileAlignment>512</FileAlignment>
+		<LangVersion>10.0</LangVersion>
+		<Nullable>enable</Nullable>
+		<Deterministic>true</Deterministic>
+		<!-- Change CopyToMods to true if you'd like builds to be moved into the Mods folder automatically-->
+		<CopyToMods Condition="'$(CopyToMods)'==''">true</CopyToMods>
+		<DebugType Condition="'$(Configuration)'=='Debug'">embedded</DebugType>
+	</PropertyGroup>
+
+  <PropertyGroup Condition="'$(ResonitePath)'==''">
+    <!-- If you don't want to provide a ResonitePath in dotnet build, you can specify one here -->
+    <ResonitePath>$(MSBuildThisFileDirectory)Resonite/</ResonitePath>
+    <ResonitePath Condition="Exists('E:\SteamLibrary\steamapps\common\Resonite\')">E:\SteamLibrary\steamapps\common\Resonite\</ResonitePath>
+    <ResonitePath Condition="Exists('$(HOME)/.steam/steam/steamapps/common/Resonite/')">$(HOME)/.steam/steam/steamapps/common/Resonite/</ResonitePath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="ILSpy\FrooxEngine.IWorldConnector.cs" />
+    <Compile Remove="ILSpy\FrooxEngine.IWorldElement.cs" />
+    <Compile Remove="ILSpy\FrooxEngine.IWorldLoadStatus.cs" />
+    <Compile Remove="ILSpy\FrooxEngine.IWorldSessionThumbnailSource.cs" />
+    <Compile Remove="ILSpy\FrooxEngine.IWorldThumbnailSource.cs" />
+    <Compile Remove="ILSpy\FrooxEngine.SessionInfo.cs" />
+    <Compile Remove="ILSpy\FrooxEngine.SessionThumbnailData.cs" />
+    <Compile Remove="ILSpy\FrooxEngine.UpdateManager.cs" />
+    <Compile Remove="ILSpy\FrooxEngine.User.cs" />
+    <Compile Remove="ILSpy\FrooxEngine.Userspace.cs" />
+    <Compile Remove="ILSpy\FrooxEngine.UserspaceRadiantDash.cs" />
+    <Compile Remove="ILSpy\FrooxEngine.UserspaceRadiantDashExtensions.cs" />
+    <Compile Remove="ILSpy\FrooxEngine.World.cs" />
+    <Compile Remove="ILSpy\FrooxEngine.WorldsDataFeed.cs" />
+    <Compile Remove="ILSpy\FrooxEngine.WorldTextureThumbnailSource.cs" />
+    <Compile Remove="ILSpy\FrooxEngine.WorldThumbnailHelper.cs" />
+    <Compile Remove="ILSpy\NetMQ.Core.cs" />
+    <Compile Remove="ILSpy\SkyFrost.Base.SessionAccessLevel.cs" />
+    <Compile Remove="ILSpy\SkyFrost.Base.UserStatus.cs" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="Elements.Assets">
+		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\Resonite_Data\Managed\Elements.Assets.dll</HintPath>
+		</Reference>
+		<Reference Include="Elements.Core">
+		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\Resonite_Data\Managed\Elements.Core.dll</HintPath>
+		</Reference>
+		<Reference Include="FrooxEngine.Store">
+		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\Resonite_Data\Managed\FrooxEngine.Store.dll</HintPath>
+		</Reference>
+		<Reference Include="NetMQ">
+		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\Resonite_Data\Managed\NetMQ.dll</HintPath>
+		</Reference>
+		<Reference Include="Newtonsoft.Json">
+		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\Resonite_Data\Managed\Newtonsoft.Json.dll</HintPath>
+		</Reference>
+		<Reference Include="Newtonsoft.Json.Bson">
+		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\Resonite_Data\Managed\Newtonsoft.Json.Bson.dll</HintPath>
+		</Reference>
+		<Reference Include="ResoniteHotReloadLib">
+		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\rml_libs\ResoniteHotReloadLib.dll</HintPath>
+		</Reference>
+		<Reference Include="ResoniteHotReloadLibCore">
+		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\rml_libs\ResoniteHotReloadLibCore.dll</HintPath>
+		</Reference>
+		<Reference Include="ResoniteModLoader">
+			<HintPath>$(ResonitePath)Libraries\ResoniteModLoader.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="HarmonyLib">
+			<HintPath>$(ResonitePath)rml_libs\0Harmony.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="FrooxEngine">
+			<HintPath>$(ResonitePath)Resonite_Data\Managed\FrooxEngine.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="SkyFrost.Base">
+		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\Resonite_Data\Managed\SkyFrost.Base.dll</HintPath>
+		</Reference>
+		<Reference Include="SkyFrost.Base.Models">
+		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\Resonite_Data\Managed\SkyFrost.Base.Models.dll</HintPath>
+		</Reference>
+		<Reference Include="System.Text.Json">
+		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\Resonite_Data\Managed\System.Text.Json.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine">
+		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\Resonite_Data\Managed\UnityEngine.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="ILSpy\" />
+	  <Folder Include="Resonite\rml_mods\" />
+	</ItemGroup>
+
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(CopyToMods)'=='true'">
+		<Message Text="Attempting to copy $(TargetFileName) to $(ResonitePath)rml_mods" Importance="high" />
+		<Copy SourceFiles="$(TargetDir)$(TargetFileName)" DestinationFolder="$(ResonitePath)rml_mods" ContinueOnError="true" />
+	</Target>
+</Project>
