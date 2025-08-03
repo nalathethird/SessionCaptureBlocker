@@ -10,7 +10,7 @@ namespace FckSessionCapture;
 public class FckSessionCapture : ResoniteMod {
 	public override string Name => "FckSessionCapture";
 	public override string Author => "NalaTheThird";
-	public override string Version => "1.0.0";
+	public override string Version => "1.0.1";
 	public override string Link => "https://github.com/nalathethird/FckSessionCapture";
 
 	[AutoRegisterConfigKey]
@@ -26,12 +26,20 @@ public class FckSessionCapture : ResoniteMod {
 		new ModConfigurationKey<bool>("capture_in_contactsonly_session", "Allow capture in contacts-only sessions", () => false);
 
 	[AutoRegisterConfigKey]
+	private static readonly ModConfigurationKey<bool> captureInContactsPlus =
+		new ModConfigurationKey<bool>("capture_in_contactsplus_session", "Allow capture in contacts+ sessions", () => false);
+
+	[AutoRegisterConfigKey]
+	private static readonly ModConfigurationKey<bool> captureInRegisteredUsers =
+		new ModConfigurationKey<bool>("capture_in_registeredusers_session", "Allow capture in registered users sessions", () => false);
+
+	[AutoRegisterConfigKey]
 	private static readonly ModConfigurationKey<bool> captureInLAN =
 		new ModConfigurationKey<bool>("capture_in_lan_session", "Allow capture in LAN (local network) sessions", () => false);
 
 	[AutoRegisterConfigKey]
 	private static readonly ModConfigurationKey<bool> captureInPublic =
-		new ModConfigurationKey<bool>("capture_in_public_session", "Allow capture in public sessions", () => false);
+		new ModConfigurationKey<bool>("capture_in_public_session", "Allow capture in public sessions (Anyone)", () => false);
 
 	[AutoRegisterConfigKey]
 	private static readonly ModConfigurationKey<bool> captureLocal =
@@ -53,7 +61,6 @@ public class FckSessionCapture : ResoniteMod {
 		Msg("FckSessionCapture: Harmony patches applied.");
 	}
 
-	// Patch StartUpload to block uploads based on config and session type
 	[HarmonyPatch(typeof(SessionThumbnailData), "StartUpload")]
 	class SessionThumbnailData_StartUpload_Patch {
 		static bool Prefix(SessionThumbnailData __instance) {
@@ -67,11 +74,13 @@ public class FckSessionCapture : ResoniteMod {
 			bool modEnabled = Config.GetValue(enabled);
 			bool allowPrivate = Config.GetValue(captureInPrivate);
 			bool allowContacts = Config.GetValue(captureInContactsOnly);
+			bool allowContactsPlus = Config.GetValue(captureInContactsPlus);
+			bool allowRegisteredUsers = Config.GetValue(captureInRegisteredUsers);
 			bool allowLAN = Config.GetValue(captureInLAN);
 			bool allowPublic = Config.GetValue(captureInPublic);
 			bool allowLocal = Config.GetValue(captureLocal);
 
-			Msg($"FckSessionCapture: Config - enabled={modEnabled}, private={allowPrivate}, contacts={allowContacts}, lan={allowLAN}, public={allowPublic}, local={allowLocal}");
+			Msg($"FckSessionCapture: Config - enabled={modEnabled}, private={allowPrivate}, contacts={allowContacts}, contactsPlus={allowContactsPlus}, registeredUsers={allowRegisteredUsers}, lan={allowLAN}, public={allowPublic}, local={allowLocal}");
 
 			if (!modEnabled) {
 				Msg("FckSessionCapture: Mod is disabled, allowing upload.");
@@ -84,68 +93,80 @@ public class FckSessionCapture : ResoniteMod {
 				return true;
 			}
 
+			// Only block if this is the focused world (the user's active session)
+			if (world.Focus != World.WorldFocus.Focused) {
+				Msg($"FckSessionCapture: World '{world.Name}' is not focused (Focus={world.Focus}), allowing upload.");
+				return true;
+			}
+
 			var accessLevel = world.AccessLevel;
-			bool isPublic = world.IsPublic;
+			Msg($"FckSessionCapture: World '{world.Name}' (AccessLevel={accessLevel}, Focused={world.Focus == World.WorldFocus.Focused})");
 
-			Msg($"FckSessionCapture: World '{world.Name}' (AccessLevel={accessLevel}, IsPublic={isPublic})");
-
-			// Block in Private sessions
-			if (accessLevel == SessionAccessLevel.Private) {
-				Msg("FckSessionCapture: Detected Private session.");
-				if (!allowPrivate) {
-					Warn("Blocked session thumbnail upload in private session.");
-					if (!allowLocal) {
-						Warn("Also blocking local session capture in private session.");
-						__instance.InvalidateThumbnail();
+			// Block or allow based on session type and config
+			switch (accessLevel) {
+				case SessionAccessLevel.Private:
+					if (!allowPrivate) {
+						Warn("Blocked session thumbnail upload in private session.");
+						if (!allowLocal) {
+							Warn("Also blocking local session capture in private session.");
+							__instance.InvalidateThumbnail();
+						}
+						return false;
 					}
-					return false;
-				} else {
-					Msg("FckSessionCapture: Allowed upload in private session (config).");
-				}
-			}
-			// Block in Contacts/ContactsPlus sessions
-			else if (accessLevel == SessionAccessLevel.Contacts || accessLevel == SessionAccessLevel.ContactsPlus) {
-				Msg("FckSessionCapture: Detected Contacts/ContactsPlus session.");
-				if (!allowContacts) {
-					Warn("Blocked session thumbnail upload in contacts-only session.");
-					if (!allowLocal) {
-						Warn("Also blocking local session capture in contacts-only session.");
-						__instance.InvalidateThumbnail();
+					break;
+				case SessionAccessLevel.Contacts:
+					if (!allowContacts) {
+						Warn("Blocked session thumbnail upload in contacts-only session.");
+						if (!allowLocal) {
+							Warn("Also blocking local session capture in contacts-only session.");
+							__instance.InvalidateThumbnail();
+						}
+						return false;
 					}
-					return false;
-				} else {
-					Msg("FckSessionCapture: Allowed upload in contacts-only session (config).");
-				}
-			}
-			// Block in LAN sessions
-			else if (accessLevel == SessionAccessLevel.LAN) {
-				Msg("FckSessionCapture: Detected LAN session.");
-				if (!allowLAN) {
-					Warn("Blocked session thumbnail upload in LAN session.");
-					if (!allowLocal) {
-						Warn("Also blocking local session capture in LAN session.");
-						__instance.InvalidateThumbnail();
+					break;
+				case SessionAccessLevel.ContactsPlus:
+					if (!allowContactsPlus) {
+						Warn("Blocked session thumbnail upload in contacts+ session.");
+						if (!allowLocal) {
+							Warn("Also blocking local session capture in contacts+ session.");
+							__instance.InvalidateThumbnail();
+						}
+						return false;
 					}
-					return false;
-				} else {
-					Msg("FckSessionCapture: Allowed upload in LAN session (config).");
-				}
-			}
-			// Block in Public sessions
-			else if (isPublic) {
-				Msg("FckSessionCapture: Detected Public session.");
-				if (!allowPublic) {
-					Warn("Blocked session thumbnail upload in public session.");
-					if (!allowLocal) {
-						Warn("Also blocking local session capture in public session.");
-						__instance.InvalidateThumbnail();
+					break;
+				case SessionAccessLevel.RegisteredUsers:
+					if (!allowRegisteredUsers) {
+						Warn("Blocked session thumbnail upload in registered users session.");
+						if (!allowLocal) {
+							Warn("Also blocking local session capture in registered users session.");
+							__instance.InvalidateThumbnail();
+						}
+						return false;
 					}
-					return false;
-				} else {
-					Msg("FckSessionCapture: Allowed upload in public session (config).");
-				}
-			} else {
-				Msg("FckSessionCapture: Session type did not match any known block type. Allowing upload.");
+					break;
+				case SessionAccessLevel.LAN:
+					if (!allowLAN) {
+						Warn("Blocked session thumbnail upload in LAN session.");
+						if (!allowLocal) {
+							Warn("Also blocking local session capture in LAN session.");
+							__instance.InvalidateThumbnail();
+						}
+						return false;
+					}
+					break;
+				case SessionAccessLevel.Anyone:
+					if (!allowPublic) {
+						Warn("Blocked session thumbnail upload in public (Anyone) session.");
+						if (!allowLocal) {
+							Warn("Also blocking local session capture in public session.");
+							__instance.InvalidateThumbnail();
+						}
+						return false;
+					}
+					break;
+				default:
+					Msg("FckSessionCapture: Unknown session type, allowing upload.");
+					break;
 			}
 
 			// If upload is allowed, but local capture is not, clear the local thumbnail
