@@ -21,25 +21,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="ILSpy\FrooxEngine.IWorldConnector.cs" />
-    <Compile Remove="ILSpy\FrooxEngine.IWorldElement.cs" />
-    <Compile Remove="ILSpy\FrooxEngine.IWorldLoadStatus.cs" />
-    <Compile Remove="ILSpy\FrooxEngine.IWorldSessionThumbnailSource.cs" />
-    <Compile Remove="ILSpy\FrooxEngine.IWorldThumbnailSource.cs" />
-    <Compile Remove="ILSpy\FrooxEngine.SessionInfo.cs" />
-    <Compile Remove="ILSpy\FrooxEngine.SessionThumbnailData.cs" />
-    <Compile Remove="ILSpy\FrooxEngine.UpdateManager.cs" />
-    <Compile Remove="ILSpy\FrooxEngine.User.cs" />
-    <Compile Remove="ILSpy\FrooxEngine.Userspace.cs" />
-    <Compile Remove="ILSpy\FrooxEngine.UserspaceRadiantDash.cs" />
-    <Compile Remove="ILSpy\FrooxEngine.UserspaceRadiantDashExtensions.cs" />
-    <Compile Remove="ILSpy\FrooxEngine.World.cs" />
-    <Compile Remove="ILSpy\FrooxEngine.WorldsDataFeed.cs" />
-    <Compile Remove="ILSpy\FrooxEngine.WorldTextureThumbnailSource.cs" />
-    <Compile Remove="ILSpy\FrooxEngine.WorldThumbnailHelper.cs" />
-    <Compile Remove="ILSpy\NetMQ.Core.cs" />
-    <Compile Remove="ILSpy\SkyFrost.Base.SessionAccessLevel.cs" />
-    <Compile Remove="ILSpy\SkyFrost.Base.UserStatus.cs" />
+    <Compile Remove="ILSpy\**" />
+    <EmbeddedResource Remove="ILSpy\**" />
+    <None Remove="ILSpy\**" />
   </ItemGroup>
 
 	<ItemGroup>
@@ -81,7 +65,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="ILSpy\" />
 	  <Folder Include="Resonite\rml_mods\" />
 	</ItemGroup>
 
