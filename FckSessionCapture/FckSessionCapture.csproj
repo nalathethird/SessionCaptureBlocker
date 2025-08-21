@@ -3,9 +3,9 @@
 		<RootNamespace>FckSessionCapture</RootNamespace>
 		<AssemblyName>FckSessionCapture</AssemblyName>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-		<TargetFramework>net472</TargetFramework>
+		<TargetFramework>net9.0</TargetFramework>
 		<FileAlignment>512</FileAlignment>
-		<LangVersion>10.0</LangVersion>
+		<LangVersion>12.0</LangVersion>
 		<Nullable>enable</Nullable>
 		<Deterministic>true</Deterministic>
 		<!-- Change CopyToMods to true if you'd like builds to be moved into the Mods folder automatically-->
@@ -43,23 +43,20 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<Reference Include="Elements.Assets">
-		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\Resonite_Data\Managed\Elements.Assets.dll</HintPath>
-		</Reference>
 		<Reference Include="Elements.Core">
-		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\Resonite_Data\Managed\Elements.Core.dll</HintPath>
+		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\Elements.Core.dll</HintPath>
+		</Reference>
+		<Reference Include="Elements.Data">
+		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\Elements.Data.dll</HintPath>
+		</Reference>
+		<Reference Include="FrooxEngine">
+		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\FrooxEngine.dll</HintPath>
 		</Reference>
 		<Reference Include="FrooxEngine.Store">
-		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\Resonite_Data\Managed\FrooxEngine.Store.dll</HintPath>
-		</Reference>
-		<Reference Include="NetMQ">
-		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\Resonite_Data\Managed\NetMQ.dll</HintPath>
+		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\FrooxEngine.Store.dll</HintPath>
 		</Reference>
 		<Reference Include="Newtonsoft.Json">
-		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\Resonite_Data\Managed\Newtonsoft.Json.dll</HintPath>
-		</Reference>
-		<Reference Include="Newtonsoft.Json.Bson">
-		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\Resonite_Data\Managed\Newtonsoft.Json.Bson.dll</HintPath>
+		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\Newtonsoft.Json.dll</HintPath>
 		</Reference>
 		<Reference Include="ResoniteHotReloadLib">
 		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\rml_libs\ResoniteHotReloadLib.dll</HintPath>
@@ -75,21 +72,11 @@
 			<HintPath>$(ResonitePath)rml_libs\0Harmony.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
-		<Reference Include="FrooxEngine">
-			<HintPath>$(ResonitePath)Resonite_Data\Managed\FrooxEngine.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
 		<Reference Include="SkyFrost.Base">
-		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\Resonite_Data\Managed\SkyFrost.Base.dll</HintPath>
+		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\SkyFrost.Base.dll</HintPath>
 		</Reference>
 		<Reference Include="SkyFrost.Base.Models">
-		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\Resonite_Data\Managed\SkyFrost.Base.Models.dll</HintPath>
-		</Reference>
-		<Reference Include="System.Text.Json">
-		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\Resonite_Data\Managed\System.Text.Json.dll</HintPath>
-		</Reference>
-		<Reference Include="UnityEngine">
-		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\Resonite_Data\Managed\UnityEngine.dll</HintPath>
+		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\SkyFrost.Base.Models.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 

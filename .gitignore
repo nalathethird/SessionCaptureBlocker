@@ -436,3 +436,4 @@ FodyWeavers.xsd
 /ExampleMod/ILSpy/NetMQ.Core.cs
 /ExampleMod/ILSpy/SkyFrost.Base.SessionAccessLevel.cs
 /ExampleMod/ILSpy/SkyFrost.Base.UserStatus.cs
+/FckSessionCapture/ILSpy
