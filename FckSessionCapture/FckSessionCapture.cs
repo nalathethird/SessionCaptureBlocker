@@ -49,6 +49,14 @@ public class FckSessionCapture : ResoniteMod {
 			() => true
 		);
 
+	[AutoRegisterConfigKey]
+	private static readonly ModConfigurationKey<bool> alwaysCapture =
+		new ModConfigurationKey<bool>(
+			"always_locally_capture",
+			"Always locally capture thumbnails, even when not uploading or sharing with the local session.",
+			() => false
+		);
+
 	private static ModConfiguration Config;
 
 	public override void OnEngineInit() {
@@ -79,9 +87,14 @@ public class FckSessionCapture : ResoniteMod {
 			bool allowLAN = Config.GetValue(captureInLAN);
 			bool allowPublic = Config.GetValue(captureInPublic);
 			bool allowLocal = Config.GetValue(captureLocal);
+			bool locallyCapture = Config.GetValue(alwaysCapture);
 
 			if (!modEnabled) {
 				Msg("FckSessionCapture: Mod is disabled, allowing capture.");
+				return true;
+			}
+
+			if (locallyCapture) {
 				return true;
 			}
 
