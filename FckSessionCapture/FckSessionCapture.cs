@@ -49,6 +49,14 @@ public class FckSessionCapture : ResoniteMod {
 			() => true
 		);
 
+	[AutoRegisterConfigKey]
+	private static readonly ModConfigurationKey<bool> alwaysCapture =
+		new ModConfigurationKey<bool>(
+			"always_locally_capture",
+			"Always locally capture thumbnails, even when not uploading or sharing with the local session.",
+			() => false
+		);
+
 	private static ModConfiguration Config;
 
 	public override void OnEngineInit() {
@@ -59,6 +67,78 @@ public class FckSessionCapture : ResoniteMod {
 		var harmony = new Harmony("com.nalathethird.fcksessioncapture");
 		harmony.PatchAll();
 		Msg("FckSessionCapture: Harmony patches applied.");
+	}
+
+	[HarmonyPatch(typeof(SessionThumbnailData), "ShouldCapture")]
+	class SessionThumbnailData_ShouldCapture_Patch {
+		static bool Prefix(SessionThumbnailData __instance) {
+			if (Config == null) {
+				Error("FckSessionCapture: Config is null! Allowing capture.");
+				return true;
+			}
+
+			bool modEnabled = Config.GetValue(enabled);
+			bool allowPrivate = Config.GetValue(captureInPrivate);
+			bool allowContacts = Config.GetValue(captureInContactsOnly);
+			bool allowContactsPlus = Config.GetValue(captureInContactsPlus);
+			bool allowRegisteredUsers = Config.GetValue(captureInRegisteredUsers);
+			bool allowLAN = Config.GetValue(captureInLAN);
+			bool allowPublic = Config.GetValue(captureInPublic);
+			bool allowLocal = Config.GetValue(captureLocal);
+			bool locallyCapture = Config.GetValue(alwaysCapture);
+
+			if (!modEnabled) {
+				return true;
+			}
+
+			if (locallyCapture) {
+				return true;
+			}
+
+			var world = __instance.World;
+			if (world == null) {
+				Error("FckSessionCapture: __instance.World is null! Allowing capture.");
+				return true;
+			}
+
+			var accessLevel = world.AccessLevel;
+
+			// Block or allow based on session type and config
+			switch (accessLevel) {
+				case SessionAccessLevel.Private:
+					if (!allowLocal && !allowPrivate) {
+						return false;
+					}
+					break;
+				case SessionAccessLevel.Contacts:
+					if (!allowLocal && !allowContacts) {
+						return false;
+					}
+					break;
+				case SessionAccessLevel.ContactsPlus:
+					if (!allowLocal && !allowContactsPlus) {
+						return false;
+					}
+					break;
+				case SessionAccessLevel.RegisteredUsers:
+					if (!allowLocal && !allowRegisteredUsers) {
+						return false;
+					}
+					break;
+				case SessionAccessLevel.LAN:
+					if (!allowLocal && !allowLAN) {
+						return false;
+					}
+					break;
+				case SessionAccessLevel.Anyone:
+					if (!allowLocal && !allowPublic) {
+						return false;
+					}
+					break;
+			}
+
+			return true;
+		}
 	}
 
 	[HarmonyPatch(typeof(SessionThumbnailData), "StartUpload")]
