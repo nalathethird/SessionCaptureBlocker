@@ -28,25 +28,25 @@
 
 	<ItemGroup>
 		<Reference Include="Elements.Core">
-		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\Elements.Core.dll</HintPath>
+		  <HintPath>$(ResonitePath)Elements.Core.dll</HintPath>
 		</Reference>
 		<Reference Include="Elements.Data">
-		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\Elements.Data.dll</HintPath>
+		  <HintPath>$(ResonitePath)Elements.Data.dll</HintPath>
 		</Reference>
 		<Reference Include="FrooxEngine">
-		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\FrooxEngine.dll</HintPath>
+		  <HintPath>$(ResonitePath)FrooxEngine.dll</HintPath>
 		</Reference>
 		<Reference Include="FrooxEngine.Store">
-		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\FrooxEngine.Store.dll</HintPath>
+		  <HintPath>$(ResonitePath)FrooxEngine.Store.dll</HintPath>
 		</Reference>
 		<Reference Include="Newtonsoft.Json">
-		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\Newtonsoft.Json.dll</HintPath>
+		  <HintPath>$(ResonitePath)Newtonsoft.Json.dll</HintPath>
 		</Reference>
 		<Reference Include="ResoniteHotReloadLib">
-		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\rml_libs\ResoniteHotReloadLib.dll</HintPath>
+		  <HintPath>$(ResonitePath)rml_libs\ResoniteHotReloadLib.dll</HintPath>
 		</Reference>
 		<Reference Include="ResoniteHotReloadLibCore">
-		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\rml_libs\ResoniteHotReloadLibCore.dll</HintPath>
+		  <HintPath>$(ResonitePath)rml_libs\ResoniteHotReloadLibCore.dll</HintPath>
 		</Reference>
 		<Reference Include="ResoniteModLoader">
 			<HintPath>$(ResonitePath)Libraries\ResoniteModLoader.dll</HintPath>
@@ -57,10 +57,10 @@
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="SkyFrost.Base">
-		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\SkyFrost.Base.dll</HintPath>
+		  <HintPath>$(ResonitePath)SkyFrost.Base.dll</HintPath>
 		</Reference>
 		<Reference Include="SkyFrost.Base.Models">
-		  <HintPath>E:\SteamLibrary\steamapps\common\Resonite\SkyFrost.Base.Models.dll</HintPath>
+		  <HintPath>$(ResonitePath)SkyFrost.Base.Models.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 
