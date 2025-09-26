@@ -72,8 +72,6 @@ public class FckSessionCapture : ResoniteMod {
 	[HarmonyPatch(typeof(SessionThumbnailData), "ShouldCapture")]
 	class SessionThumbnailData_ShouldCapture_Patch {
 		static bool Prefix(SessionThumbnailData __instance) {
-			Msg("FckSessionCapture: ShouldCapture Prefix entered.");
-
 			if (Config == null) {
 				Error("FckSessionCapture: Config is null! Allowing capture.");
 				return true;
@@ -90,7 +88,6 @@ public class FckSessionCapture : ResoniteMod {
 			bool locallyCapture = Config.GetValue(alwaysCapture);
 
 			if (!modEnabled) {
-				Msg("FckSessionCapture: Mod is disabled, allowing capture.");
 				return true;
 			}
 
@@ -105,52 +102,41 @@ public class FckSessionCapture : ResoniteMod {
 			}
 
 			var accessLevel = world.AccessLevel;
-			Msg($"FckSessionCapture: World '{world.Name}' (AccessLevel={accessLevel}, Focused={world.Focus == World.WorldFocus.Focused})");
 
 			// Block or allow based on session type and config
 			switch (accessLevel) {
 				case SessionAccessLevel.Private:
 					if (!allowLocal && !allowPrivate) {
-						Warn("Blocked session thumbnail capture in private session.");
 						return false;
 					}
 					break;
 				case SessionAccessLevel.Contacts:
 					if (!allowLocal && !allowContacts) {
-						Warn("Blocked session thumbnail capture in contacts-only session.");
 						return false;
 					}
 					break;
 				case SessionAccessLevel.ContactsPlus:
 					if (!allowLocal && !allowContactsPlus) {
-						Warn("Blocked session thumbnail capture in contacts+ session.");
 						return false;
 					}
 					break;
 				case SessionAccessLevel.RegisteredUsers:
 					if (!allowLocal && !allowRegisteredUsers) {
-						Warn("Blocked session thumbnail capture in registered users session.");
 						return false;
 					}
 					break;
 				case SessionAccessLevel.LAN:
 					if (!allowLocal && !allowLAN) {
-						Warn("Blocked session thumbnail capture in LAN session.");
 						return false;
 					}
 					break;
 				case SessionAccessLevel.Anyone:
 					if (!allowLocal && !allowPublic) {
-						Warn("Blocked session thumbnail capture in public (Anyone) session.");
 						return false;
 					}
 					break;
-				default:
-					Msg("FckSessionCapture: Unknown session type, allowing capture.");
-					break;
 			}
 
-			Msg("FckSessionCapture: ShouldCapture Prefix exiting, allowing capture.");
 			return true;
 		}
 	}
