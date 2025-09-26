@@ -10,7 +10,7 @@ namespace FckSessionCapture;
 public class FckSessionCapture : ResoniteMod {
 	public override string Name => "FckSessionCapture";
 	public override string Author => "NalaTheThird";
-	public override string Version => "1.0.2";
+	public override string Version => "1.0.3";
 	public override string Link => "https://github.com/nalathethird/Fck-SessionCapture";
 
 	[AutoRegisterConfigKey]
