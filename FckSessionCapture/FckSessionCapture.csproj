@@ -29,24 +29,31 @@
 	<ItemGroup>
 		<Reference Include="Elements.Core">
 		  <HintPath>$(ResonitePath)Elements.Core.dll</HintPath>
+			<Private>False</Private>
 		</Reference>
 		<Reference Include="Elements.Data">
 		  <HintPath>$(ResonitePath)Elements.Data.dll</HintPath>
+			<Private>False</Private>
 		</Reference>
 		<Reference Include="FrooxEngine">
 		  <HintPath>$(ResonitePath)FrooxEngine.dll</HintPath>
+			<Private>False</Private>
 		</Reference>
 		<Reference Include="FrooxEngine.Store">
 		  <HintPath>$(ResonitePath)FrooxEngine.Store.dll</HintPath>
+			<Private>False</Private>
 		</Reference>
 		<Reference Include="Newtonsoft.Json">
 		  <HintPath>$(ResonitePath)Newtonsoft.Json.dll</HintPath>
+			<Private>False</Private>
 		</Reference>
 		<Reference Include="ResoniteHotReloadLib">
 		  <HintPath>$(ResonitePath)rml_libs\ResoniteHotReloadLib.dll</HintPath>
+			<Private>False</Private>
 		</Reference>
 		<Reference Include="ResoniteHotReloadLibCore">
 		  <HintPath>$(ResonitePath)rml_libs\ResoniteHotReloadLibCore.dll</HintPath>
+			<Private>False</Private>
 		</Reference>
 		<Reference Include="ResoniteModLoader">
 			<HintPath>$(ResonitePath)Libraries\ResoniteModLoader.dll</HintPath>
@@ -58,9 +65,11 @@
 		</Reference>
 		<Reference Include="SkyFrost.Base">
 		  <HintPath>$(ResonitePath)SkyFrost.Base.dll</HintPath>
+			<Private>False</Private>
 		</Reference>
 		<Reference Include="SkyFrost.Base.Models">
 		  <HintPath>$(ResonitePath)SkyFrost.Base.Models.dll</HintPath>
+			<Private>False</Private>
 		</Reference>
 	</ItemGroup>
 
