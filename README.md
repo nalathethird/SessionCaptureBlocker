@@ -1,4 +1,4 @@
-# FckSessionCapture
+# SessionCaptureBlocker
 
 A [ResoniteModLoader](https://github.com/resonite-modding-group/ResoniteModLoader) mod for [Resonite](https://resonite.com/) that gives you full control over session capture privacy.
 
