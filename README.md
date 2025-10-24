@@ -18,7 +18,7 @@ A [ResoniteModLoader](https://github.com/resonite-modding-group/ResoniteModLoade
 
 ## Installation
 1. Install [ResoniteModLoader](https://github.com/resonite-modding-group/ResoniteModLoader).
-2. Place [FckSessionCapture.dll](https://github.com/nalathethird/Fck-SessionCapture/releases/latest/download/FckSessionCapture.dll) into your `rml_mods` folder.  
+2. Place [SessionCaptureBlocker.dll](https://github.com/nalathethird/SessionCaptureBlocker/releases/latest/download/SessionCaptureBlocker.dll) into your `rml_mods` folder.  
    This folder should be at `C:\Program Files (x86)\Steam\steamapps\common\Resonite\rml_mods` for a default install.  
    You can create it if it's missing, or if you launch the game once with ResoniteModLoader installed it will create this folder for you.
 3. Start the game.  
@@ -29,12 +29,14 @@ A [ResoniteModLoader](https://github.com/resonite-modding-group/ResoniteModLoade
 You can configure the mod in the ResoniteModLoader mod settings UI.  
 Options include:
 
-- **Enable FckSessionCapture mod**: Master toggle for the mod.
+- **Enable SessionCaptureBlocker mod**: Master toggle for the mod.
 - **Allow capture in private/contacts/LAN/public sessions**: Control uploads for each session type.
 - **Allow local session capture**: If disabled, even local session captures are blocked (max privacy).
 
-## License
+**Star this repo if it helped you!** ⭐ It keeps me motivated to maintain and improve my mods.
 
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+Or, if you want to go further, Support me on [Ko-fi!](https://ko-fi.com/nalathethird) ☕
+It helps me pay bills, and other things someone whos unemployed cant pay!
+****
 
 ---
