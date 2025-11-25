@@ -2,12 +2,14 @@ using HarmonyLib;
 using ResoniteModLoader;
 using FrooxEngine;
 using SkyFrost.Base;
+using Elements.Assets;
+using System.Threading.Tasks;
 
 namespace SessionCaptureBlocker;
 
 public class SessionCaptureBlocker : ResoniteMod
 {
-    internal const string VERSION_CONSTANT = "1.0.3";
+    internal const string VERSION_CONSTANT = "1.1.0";
     public override string Name => "SessionCaptureBlocker";
     public override string Author => "NalaTheThird";
     public override string Version => VERSION_CONSTANT;
@@ -22,6 +24,10 @@ public class SessionCaptureBlocker : ResoniteMod
         new ModConfigurationKey<bool>("capture_in_private_session", "Allow capture in private sessions", () => false);
 
     [AutoRegisterConfigKey]
+    private static readonly ModConfigurationKey<bool> captureInLAN =
+    new ModConfigurationKey<bool>("capture_in_lan_session", "Allow capture in LAN (local network) sessions", () => false);
+
+    [AutoRegisterConfigKey]
     private static readonly ModConfigurationKey<bool> captureInContactsOnly =
         new ModConfigurationKey<bool>("capture_in_contactsonly_session", "Allow capture in contacts-only sessions", () => false);
 
@@ -32,10 +38,6 @@ public class SessionCaptureBlocker : ResoniteMod
     [AutoRegisterConfigKey]
     private static readonly ModConfigurationKey<bool> captureInRegisteredUsers =
         new ModConfigurationKey<bool>("capture_in_registeredusers_session", "Allow capture in registered users sessions", () => false);
-
-    [AutoRegisterConfigKey]
-    private static readonly ModConfigurationKey<bool> captureInLAN =
-        new ModConfigurationKey<bool>("capture_in_lan_session", "Allow capture in LAN (local network) sessions", () => false);
 
     [AutoRegisterConfigKey]
     private static readonly ModConfigurationKey<bool> captureInPublic =
@@ -66,7 +68,6 @@ public class SessionCaptureBlocker : ResoniteMod
 
         var harmony = new Harmony("com.nalathethird.SessionCaptureBlocker");
         harmony.PatchAll();
-        Msg("Harmony patch applied - Sessions are now Private!");
     }
 
     [HarmonyPatch(typeof(SessionThumbnailData), "ShouldCapture")]
@@ -289,6 +290,143 @@ public class SessionCaptureBlocker : ResoniteMod
             }
 
             Msg("StartUpload Prefix exiting, allowing upload.");
+            return true;
+        }
+    }
+
+    [HarmonyPatch(typeof(CaptureThumbnailSource), "GetThumbnail")]
+    class CaptureThumbnailSource_GetThumbnail_Patch
+    {
+        static bool Prefix(CaptureThumbnailSource __instance, ref Task<Bitmap2D> __result)
+        {
+            if (Config == null)
+            {
+                Error("Config is null! Allowing thumbnail capture.");
+                return true;
+            }
+
+            bool modEnabled = Config.GetValue(enabled);
+            bool locallyCapture = Config.GetValue(alwaysCapture);
+
+            if (!modEnabled)
+            {
+                return true;
+            }
+
+            if (locallyCapture)
+            {
+                return true;
+            }
+
+            var world = __instance.World;
+            if (world == null)
+            {
+                Error("World is null in CaptureThumbnailSource! Allowing capture.");
+                return true;
+            }
+
+            bool allowLocal = Config.GetValue(captureLocal);
+            var accessLevel = world.AccessLevel;
+
+            bool shouldBlock = false;
+
+            switch (accessLevel)
+            {
+                case SessionAccessLevel.Private:
+                    shouldBlock = !Config.GetValue(captureInPrivate) && !allowLocal;
+                    break;
+                case SessionAccessLevel.Contacts:
+                    shouldBlock = !Config.GetValue(captureInContactsOnly) && !allowLocal;
+                    break;
+                case SessionAccessLevel.ContactsPlus:
+                    shouldBlock = !Config.GetValue(captureInContactsPlus) && !allowLocal;
+                    break;
+                case SessionAccessLevel.RegisteredUsers:
+                    shouldBlock = !Config.GetValue(captureInRegisteredUsers) && !allowLocal;
+                    break;
+                case SessionAccessLevel.LAN:
+                    shouldBlock = !Config.GetValue(captureInLAN) && !allowLocal;
+                    break;
+                case SessionAccessLevel.Anyone:
+                    shouldBlock = !Config.GetValue(captureInPublic) && !allowLocal;
+                    break;
+            }
+
+            if (shouldBlock)
+            {
+                Msg($"Blocked GetThumbnail for {accessLevel} session - preventing rendering entirely.");
+                __result = Task.FromResult<Bitmap2D>(null);
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+    [HarmonyPatch(typeof(CaptureThumbnailSource), "CaptureThumbnail")]
+    class CaptureThumbnailSource_CaptureThumbnail_Patch
+    {
+        static bool Prefix(World world, ref Task<Bitmap2D> __result)
+        {
+            if (Config == null)
+            {
+                Error("Config is null! Allowing thumbnail capture.");
+                return true;
+            }
+
+            bool modEnabled = Config.GetValue(enabled);
+            bool locallyCapture = Config.GetValue(alwaysCapture);
+
+            if (!modEnabled)
+            {
+                return true;
+            }
+
+            if (locallyCapture)
+            {
+                return true;
+            }
+
+            if (world == null)
+            {
+                Error("World is null in CaptureThumbnail! Allowing capture.");
+                return true;
+            }
+
+            bool allowLocal = Config.GetValue(captureLocal);
+            var accessLevel = world.AccessLevel;
+
+            bool shouldBlock = false;
+
+            switch (accessLevel)
+            {
+                case SessionAccessLevel.Private:
+                    shouldBlock = !Config.GetValue(captureInPrivate) && !allowLocal;
+                    break;
+                case SessionAccessLevel.Contacts:
+                    shouldBlock = !Config.GetValue(captureInContactsOnly) && !allowLocal;
+                    break;
+                case SessionAccessLevel.ContactsPlus:
+                    shouldBlock = !Config.GetValue(captureInContactsPlus) && !allowLocal;
+                    break;
+                case SessionAccessLevel.RegisteredUsers:
+                    shouldBlock = !Config.GetValue(captureInRegisteredUsers) && !allowLocal;
+                    break;
+                case SessionAccessLevel.LAN:
+                    shouldBlock = !Config.GetValue(captureInLAN) && !allowLocal;
+                    break;
+                case SessionAccessLevel.Anyone:
+                    shouldBlock = !Config.GetValue(captureInPublic) && !allowLocal;
+                    break;
+            }
+
+            if (shouldBlock)
+            {
+                Msg($"Blocked CaptureThumbnail for {accessLevel} session - no GPU/CPU rendering will occur.");
+                __result = Task.FromResult<Bitmap2D>(null);
+                return false;
+            }
+
             return true;
         }
     }
